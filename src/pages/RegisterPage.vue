@@ -123,8 +123,8 @@ export default {
 
     const register = async () => {
       // Shitty lines, don't use it as the validate shits it all.
-      const valid = await v$.value.$validate();
-      if (!valid) return;
+      // const valid = await v$.value.$validate();
+      // if (!valid) return;
 
       try {
         await window.axios.post("http://localhost:3000/Register", {
