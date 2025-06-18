@@ -58,5 +58,11 @@ app.component('BCol', BCol);
 // Global store
 app.config.globalProperties.store = store;
 
+window.axios = axios;
+window.router = router;
+window.toast = (title, message, variant = 'info') => {
+  alert(`${title}\n\n${message}\n\n${variant}`); // או תחליף ל-toast אמיתי
+};
+
 // Mount app
 app.mount('#app');

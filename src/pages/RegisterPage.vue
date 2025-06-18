@@ -122,14 +122,25 @@ export default {
     const v$ = useVuelidate(rules, state);
 
     const register = async () => {
+      // Shitty lines, don't use it as the validate shits it all.
       const valid = await v$.value.$validate();
       if (!valid) return;
 
       try {
-        await window.axios.post('/register', {
-          username: state.username,
-          password: state.password,
-          country: state.country,
+        await window.axios.post("http://localhost:3000/Register", {
+          // Add here more.
+          // username: state.username,
+          // password: state.password,
+          // country: state.country,
+
+          // DEMO OMLY!
+          username: 'testuser1',
+          firstname: 'John',
+          lastname: 'Doe',
+          country: 'USA',
+          password: 'test123',
+          email: 'john@example.com',
+          profilePic: 'https://example.com/profile.jpg',
         });
         window.toast('Registration successful', 'You can now login', 'success');
         window.router.push('/login');
