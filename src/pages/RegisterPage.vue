@@ -142,7 +142,7 @@
 <script>
 import { reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength, maxLength, alpha, sameAs } from '@vuelidate/validators';
+import { required, minLength, maxLength, alpha, sameAs, helpers } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
 
 export default {
@@ -150,11 +150,21 @@ export default {
   setup() {
     const state = reactive({
       username: '',
+      firstname: '',
+      lastname: '',
+      email: '',
       password: '',
       confirmedPassword: '',
       country: '',
+      profilePic: null,
       submitError: null,
     });
+
+    // Custom password validator: at least one digit and one special character
+    const passwordComplex = helpers.regex(
+      'passwordComplex',
+      /^(?=.*[0-9])(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]).+$/
+    );
 
     const rules = {
       username: {
@@ -163,11 +173,25 @@ export default {
         maxLength: maxLength(8),
         alpha,
       },
+      firstname: {
+        required,
+        alpha,
+      },
+      lastname: {
+        required,
+        alpha,
+      },
+      email: {
+        required,
+        // Simple email regex, or use Vuelidate's built-in email validator if available
+        email: helpers.regex('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+      },
       country: { required },
       password: {
         required,
         minLength: minLength(5),
         maxLength: maxLength(10),
+        passwordComplex,
       },
       confirmedPassword: {
         required,
@@ -177,10 +201,11 @@ export default {
 
     const v$ = useVuelidate(rules, state);
 
+
     const register = async () => {
       // Shitty lines, don't use it as the validate shits it all.
-      // const valid = await v$.value.$validate();
-      // if (!valid) return;
+      const valid = await v$.value.$validate();
+      if (!valid) return;
 
       try {
         await window.axios.post("http://localhost:3000/Register", {
