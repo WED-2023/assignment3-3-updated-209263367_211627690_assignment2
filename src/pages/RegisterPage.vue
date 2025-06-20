@@ -164,21 +164,6 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <!-- Profile Picture -->
-      <b-form-group label="Profile Picture (optional)" label-for="profilePic">
-        <b-form-file
-          id="profilePic"
-          v-model="state.profilePic"
-          accept="image/*"
-        />
-        <div v-if="state.profilePic" class="mt-2">
-          <img
-            :src="profilePicUrl"
-            alt="Preview"
-            style="max-width: 100px; max-height: 100px;"
-          />
-        </div>
-      </b-form-group>
 
       <b-button
         type="submit"
