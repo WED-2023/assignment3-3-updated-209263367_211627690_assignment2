@@ -1,9 +1,9 @@
 import { createApp, reactive } from 'vue';
 import App from './App.vue';
-import routes from './router/index';
+import router from './router/index';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import { createRouter, createWebHistory } from 'vue-router';
+
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
@@ -15,11 +15,6 @@ import { BContainer, BRow, BCol } from 'bootstrap-vue-3';
 import Vuelidate from '@vuelidate/core';
 
 
-// Router setup
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-});
 
 // Shared store
 const store = reactive({
