@@ -101,6 +101,8 @@
             @change="v$.country.$touch()"
             @focus="focusedField = 'country'"
             @blur="focusedField = null"
+            placeholder="Select a country"
+            required
           />
           <span v-if="focusedField === 'country'" class="input-note ms-2">
             Please select your country
@@ -156,7 +158,7 @@
         </div>
         <b-form-invalid-feedback v-if="v$.confirmedPassword.$dirty && v$.confirmedPassword.$error">
           <div v-if="!v$.confirmedPassword.required">Confirmation is required.</div>
-          <div v-else-if="!v$.confirmedPassword.sameAsPassword">
+          <div v-else-if="!v$.confirmedPassword.matchesPassword">
             Passwords do not match.
           </div>
         </b-form-invalid-feedback>
@@ -180,10 +182,10 @@
 
       <b-button
         type="submit"
-        variant="secondary"
         class="w-100"
+        :variant="v$.$invalid || v$.$pending ? 'secondary' : 'success'"
         :disabled="v$.$invalid || v$.$pending"
-        style="background-color: #adb5bd; border-color: #adb5bd; color: #fff;"
+        style="color: #fff;"
       >
         Register
       </b-button>
@@ -207,9 +209,9 @@
 </template>
 
 <script>
-import { reactive, computed, ref, watch } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength, maxLength, alpha, sameAs, helpers, email } from '@vuelidate/validators';
+import { required, minLength, maxLength, alpha, helpers, email } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
 
 // Helper: check for at least one digit and one special char (no regex)
@@ -225,6 +227,13 @@ const passwordComplex = helpers.withMessage(
   'Password must contain at least one digit and one special character.',
   value => hasDigitAndSpecial(value)
 );
+
+// Custom validator for confirm password
+const matchesPassword = (state) =>
+  helpers.withMessage(
+    'Passwords do not match.',
+    value => value === state.password
+  );
 
 export default {
   name: 'RegisterPage',
@@ -271,20 +280,11 @@ export default {
       },
       confirmedPassword: {
         required,
-        sameAsPassword: sameAs(() => state.password),
+        matchesPassword: matchesPassword(state),
       },
     };
 
     const v$ = useVuelidate(rules, state);
-
-    // Watch password and update confirmedPassword validation when password changes
-watch(
-  [() => state.password, () => state.confirmedPassword],
-  () => {
-    v$.value.confirmedPassword.$touch();
-    v$.value.confirmedPassword.$validate();
-  }
-);
 
     // Helper for input border color
     const getValidationState = (field) => {
@@ -326,7 +326,7 @@ watch(
 
     return {
       state,
-      countries: ['Select a country', ...rawCountries],
+      countries: rawCountries,
       register,
       v$,
       getValidationState,
