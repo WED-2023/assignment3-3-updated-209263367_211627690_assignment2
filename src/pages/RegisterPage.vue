@@ -4,12 +4,20 @@
     <b-form @submit.prevent="register">
       <!-- Username -->
       <b-form-group label="Username" label-for="username">
-        <b-form-input
-          id="username"
-          v-model="state.username"
-          @blur="v$.username.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.username.$error">
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="username"
+            v-model="state.username"
+            :state="getValidationState(v$.username)"
+            @input="v$.username.$touch()"
+            @focus="focusedField = 'username'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'username'" class="input-note ms-2">
+            3-8 letters, English only
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.username.$dirty && v$.username.$error">
           <div v-if="!v$.username.required">Username is required.</div>
           <div v-else-if="!v$.username.minLength || !v$.username.maxLength">
             Username must be 3–8 characters.
@@ -20,82 +28,133 @@
 
       <!-- First Name -->
       <b-form-group label="First Name" label-for="firstname">
-        <b-form-input
-          id="firstname"
-          v-model="state.firstname"
-          @blur="v$.firstname?.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.firstname?.$error">
-          <div v-if="!v$.firstname?.required">First name is required.</div>
-          <div v-else-if="!v$.firstname?.alpha">First name must contain only letters.</div>
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="firstname"
+            v-model="state.firstname"
+            :state="getValidationState(v$.firstname)"
+            @input="v$.firstname.$touch()"
+            @focus="focusedField = 'firstname'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'firstname'" class="input-note ms-2">
+            Letters only
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.firstname.$dirty && v$.firstname.$error">
+          <div v-if="!v$.firstname.required">First name is required.</div>
+          <div v-else-if="!v$.firstname.alpha">First name must contain only letters.</div>
         </b-form-invalid-feedback>
       </b-form-group>
 
       <!-- Last Name -->
       <b-form-group label="Last Name" label-for="lastname">
-        <b-form-input
-          id="lastname"
-          v-model="state.lastname"
-          @blur="v$.lastname?.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.lastname?.$error">
-          <div v-if="!v$.lastname?.required">Last name is required.</div>
-          <div v-else-if="!v$.lastname?.alpha">Last name must contain only letters.</div>
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="lastname"
+            v-model="state.lastname"
+            :state="getValidationState(v$.lastname)"
+            @input="v$.lastname.$touch()"
+            @focus="focusedField = 'lastname'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'lastname'" class="input-note ms-2">
+            Letters only
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.lastname.$dirty && v$.lastname.$error">
+          <div v-if="!v$.lastname.required">Last name is required.</div>
+          <div v-else-if="!v$.lastname.alpha">Last name must contain only letters.</div>
         </b-form-invalid-feedback>
       </b-form-group>
 
       <!-- Email -->
       <b-form-group label="Email" label-for="email">
-        <b-form-input
-          id="email"
-          type="email"
-          v-model="state.email"
-          @blur="v$.email?.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.email?.$error">
-          <div v-if="!v$.email?.required">Email is required.</div>
-          <div v-else-if="!v$.email?.email">Email must be valid.</div>
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="email"
+            type="email"
+            v-model="state.email"
+            :state="getValidationState(v$.email)"
+            @input="v$.email.$touch()"
+            @focus="focusedField = 'email'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'email'" class="input-note ms-2">
+            Must be a valid email address
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.email.$dirty && v$.email.$error">
+          <div v-if="!v$.email.required">Email is required.</div>
+          <div v-else-if="!v$.email.email">Email must be valid.</div>
         </b-form-invalid-feedback>
       </b-form-group>
 
       <!-- Country -->
       <b-form-group label="Country" label-for="country">
-        <b-form-select
-          id="country"
-          v-model="state.country"
-          :options="countries"
-          @change="v$.country.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.country.$error">
+        <div class="d-flex align-items-center">
+          <b-form-select
+            id="country"
+            v-model="state.country"
+            :options="countries"
+            :state="getValidationState(v$.country)"
+            @change="v$.country.$touch()"
+            @focus="focusedField = 'country'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'country'" class="input-note ms-2">
+            Please select your country
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.country.$dirty && v$.country.$error">
           Country is required.
         </b-form-invalid-feedback>
       </b-form-group>
 
       <!-- Password -->
       <b-form-group label="Password" label-for="password">
-        <b-form-input
-          id="password"
-          type="password"
-          v-model="state.password"
-          @blur="v$.password.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.password.$error">
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="password"
+            type="password"
+            v-model="state.password"
+            :state="getValidationState(v$.password)"
+            @input="v$.password.$touch()"
+            @focus="focusedField = 'password'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'password'" class="input-note ms-2">
+            5-10 chars, at least 1 digit & 1 special character
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.password.$dirty && v$.password.$error">
           <div v-if="!v$.password.required">Password is required.</div>
           <div v-else-if="!v$.password.minLength || !v$.password.maxLength">
             Password must be 5–10 characters.
+          </div>
+          <div v-else-if="!v$.password.passwordComplex">
+            Password must contain at least one digit and one special character.
           </div>
         </b-form-invalid-feedback>
       </b-form-group>
 
       <!-- Confirm Password -->
       <b-form-group label="Confirm Password" label-for="confirmedPassword">
-        <b-form-input
-          id="confirmedPassword"
-          type="password"
-          v-model="state.confirmedPassword"
-          @blur="v$.confirmedPassword.$touch()"
-        />
-        <b-form-invalid-feedback v-if="v$.confirmedPassword.$error">
+        <div class="d-flex align-items-center">
+          <b-form-input
+            id="confirmedPassword"
+            type="password"
+            v-model="state.confirmedPassword"
+            :state="getValidationState(v$.confirmedPassword)"
+            @input="v$.confirmedPassword.$touch()"
+            @focus="focusedField = 'confirmedPassword'"
+            @blur="focusedField = null"
+          />
+          <span v-if="focusedField === 'confirmedPassword'" class="input-note ms-2">
+            Must match the password above
+          </span>
+        </div>
+        <b-form-invalid-feedback v-if="v$.confirmedPassword.$dirty && v$.confirmedPassword.$error">
           <div v-if="!v$.confirmedPassword.required">Confirmation is required.</div>
           <div v-else-if="!v$.confirmedPassword.sameAsPassword">
             Passwords do not match.
@@ -119,7 +178,15 @@
         </div>
       </b-form-group>
 
-      <b-button type="submit" variant="success" class="w-100">Register</b-button>
+      <b-button
+        type="submit"
+        variant="secondary"
+        class="w-100"
+        :disabled="v$.$invalid || v$.$pending"
+        style="background-color: #adb5bd; border-color: #adb5bd; color: #fff;"
+      >
+        Register
+      </b-button>
 
       <b-alert
         variant="danger"
@@ -140,10 +207,24 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, computed, ref, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength, maxLength, alpha, sameAs, helpers } from '@vuelidate/validators';
+import { required, minLength, maxLength, alpha, sameAs, helpers, email } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
+
+// Helper: check for at least one digit and one special char (no regex)
+function hasDigitAndSpecial(val) {
+  if (typeof val !== 'string') return false;
+  const hasDigit = val.split('').some(c => c >= '0' && c <= '9');
+  const specialChars = "!@#$%^&*()_+-=[]{};':\"\\|,.<>/?";
+  const hasSpecial = val.split('').some(c => specialChars.includes(c));
+  return hasDigit && hasSpecial;
+}
+
+const passwordComplex = helpers.withMessage(
+  'Password must contain at least one digit and one special character.',
+  value => hasDigitAndSpecial(value)
+);
 
 export default {
   name: 'RegisterPage',
@@ -160,11 +241,7 @@ export default {
       submitError: null,
     });
 
-    // Custom password validator: at least one digit and one special character
-    const passwordComplex = helpers.regex(
-      'passwordComplex',
-      /^(?=.*[0-9])(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]).+$/
-    );
+    const focusedField = ref(null);
 
     const rules = {
       username: {
@@ -183,8 +260,7 @@ export default {
       },
       email: {
         required,
-        // Simple email regex, or use Vuelidate's built-in email validator if available
-        email: helpers.regex('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+        email,
       },
       country: { required },
       password: {
@@ -201,20 +277,41 @@ export default {
 
     const v$ = useVuelidate(rules, state);
 
+    // Watch password and update confirmedPassword validation when password changes
+watch(
+  [() => state.password, () => state.confirmedPassword],
+  () => {
+    v$.value.confirmedPassword.$touch();
+    v$.value.confirmedPassword.$validate();
+  }
+);
+
+    // Helper for input border color
+    const getValidationState = (field) => {
+      if (!field.$dirty) return null;
+      return !field.$invalid;
+    };
+
+    // Profile picture preview
+    const profilePicUrl = computed(() => {
+      if (!state.profilePic) return '';
+      if (typeof state.profilePic === 'string') return state.profilePic;
+      try {
+        return URL.createObjectURL(state.profilePic);
+      } catch {
+        return '';
+      }
+    });
 
     const register = async () => {
-      // Shitty lines, don't use it as the validate shits it all.
       const valid = await v$.value.$validate();
       if (!valid) return;
 
       try {
         await window.axios.post("http://localhost:3000/Register", {
-          // Add here more.
           username: state.username,
           password: state.password,
           country: state.country,
-
-          // DEMO OMLY!
           firstname: state.firstname,
           lastname: state.lastname,
           email: state.email,
@@ -232,7 +329,28 @@ export default {
       countries: ['Select a country', ...rawCountries],
       register,
       v$,
+      getValidationState,
+      profilePicUrl,
+      focusedField,
     };
   },
 };
 </script>
+
+<style scoped>
+/* Highlight invalid fields with red border */
+.is-invalid, .b-form-input.is-invalid, .b-form-select.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
+.input-note {
+  font-size: 0.92em;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-left: 4px;
+  white-space: nowrap;
+  border: 1px solid #e2e3e5;
+}
+</style>
