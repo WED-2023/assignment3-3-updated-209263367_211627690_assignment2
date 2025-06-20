@@ -18,6 +18,46 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
+      <!-- First Name -->
+      <b-form-group label="First Name" label-for="firstname">
+        <b-form-input
+          id="firstname"
+          v-model="state.firstname"
+          @blur="v$.firstname?.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.firstname?.$error">
+          <div v-if="!v$.firstname?.required">First name is required.</div>
+          <div v-else-if="!v$.firstname?.alpha">First name must contain only letters.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- Last Name -->
+      <b-form-group label="Last Name" label-for="lastname">
+        <b-form-input
+          id="lastname"
+          v-model="state.lastname"
+          @blur="v$.lastname?.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.lastname?.$error">
+          <div v-if="!v$.lastname?.required">Last name is required.</div>
+          <div v-else-if="!v$.lastname?.alpha">Last name must contain only letters.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- Email -->
+      <b-form-group label="Email" label-for="email">
+        <b-form-input
+          id="email"
+          type="email"
+          v-model="state.email"
+          @blur="v$.email?.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.email?.$error">
+          <div v-if="!v$.email?.required">Email is required.</div>
+          <div v-else-if="!v$.email?.email">Email must be valid.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
       <!-- Country -->
       <b-form-group label="Country" label-for="country">
         <b-form-select
@@ -61,6 +101,22 @@
             Passwords do not match.
           </div>
         </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- Profile Picture -->
+      <b-form-group label="Profile Picture (optional)" label-for="profilePic">
+        <b-form-file
+          id="profilePic"
+          v-model="state.profilePic"
+          accept="image/*"
+        />
+        <div v-if="state.profilePic" class="mt-2">
+          <img
+            :src="profilePicUrl"
+            alt="Preview"
+            style="max-width: 100px; max-height: 100px;"
+          />
+        </div>
       </b-form-group>
 
       <b-button type="submit" variant="success" class="w-100">Register</b-button>
@@ -129,17 +185,14 @@ export default {
       try {
         await window.axios.post("http://localhost:3000/Register", {
           // Add here more.
-          // username: state.username,
-          // password: state.password,
-          // country: state.country,
+          username: state.username,
+          password: state.password,
+          country: state.country,
 
           // DEMO OMLY!
-          username: 'testuser1',
-          firstname: 'John',
-          lastname: 'Doe',
-          country: 'USA',
-          password: 'test123',
-          email: 'john@example.com',
+          firstname: state.firstname,
+          lastname: state.lastname,
+          email: state.email,
           profilePic: 'https://example.com/profile.jpg',
         });
         window.toast('Registration successful', 'You can now login', 'success');

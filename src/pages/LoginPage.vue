@@ -77,12 +77,12 @@ export default {
       if (!valid) return;
 
       try {
-        await window.axios.post('/login', {
+        await window.axios.post('http://localhost:3000/Login', {
           username: state.username,
           password: state.password,
         });
         window.store.login(state.username);
-        window.router.push('/main');
+        window.router.push('/');
       } catch (err) {
         state.submitError = err.response?.data?.message || 'Unexpected error.';
       }
