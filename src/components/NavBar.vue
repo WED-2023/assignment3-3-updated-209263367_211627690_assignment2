@@ -20,10 +20,18 @@
           <span class="navbar-text fw-bold me-3">
             Hello, {{ store.username }}
           </span>
-        <b-dropdown text="Personal Area" variant="link" class="me-2" right>
-            <b-dropdown-item @click="goTo('favorites')">My Favorite Recipes</b-dropdown-item>
+          <!-- BootstrapVue 3 Dropdown -->
+          <b-dropdown
+            id="personal-dropdown"
+            text="Personal"
+            class="me-2"
+            variant="link"
+            toggle-class="p-0"
+            style="font-weight: 500; font-size: 1.08rem;"
+          >
+            <b-dropdown-item @click="goTo('myFavorites')">Favorites</b-dropdown-item>
             <b-dropdown-item @click="goTo('myRecipes')">My Recipes</b-dropdown-item>
-            <b-dropdown-item @click="goTo('familyRecipes')">My Family Recipes</b-dropdown-item>
+            <b-dropdown-item @click="goTo('myFamilyRecipes')">Family Recipes</b-dropdown-item>
           </b-dropdown>
           <b-nav-item href="#" @click.prevent="goToRoute('createRecipe')" class="me-2">Create New Recipe</b-nav-item>
           <b-button variant="outline-danger" size="sm" @click="logout" class="ms-2">
@@ -52,14 +60,14 @@ export default {
 
     const goTo = (tab) => {
       switch (tab) {
-        case 'favorites':
-          window.router.push('/my-favorites');
+        case 'myFavorites':
+          window.router.push({ name: 'myFavorites' });
           break;
         case 'myRecipes':
-          window.router.push('/my-recipes');
+          window.router.push({ name: 'myRecipes' });
           break;
-        case 'familyRecipes':
-          window.router.push('/my-family-recipes');
+        case 'myFamilyRecipes':
+          window.router.push({ name: 'myFamilyRecipes' });
           break;
       }
     };

@@ -5,7 +5,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle.js';
+//import 'bootstrap/dist/js/bootstrap.bundle.js'; - fuck shit move this shittt
 
 // BootstrapVue 3
 import BootstrapVue3 from 'bootstrap-vue-3';
@@ -53,14 +53,16 @@ app.use(VueAxios, axios);
 app.use(BootstrapVue3);
 app.use(Vuelidate);
 
-// Global store
+// Global properties
 app.config.globalProperties.store = store;
+app.config.globalProperties.toast = (title, message, variant = 'info') => {
+  alert(`${title}\n\n${message}\n\n${variant}`);
+};
+app.config.globalProperties.router = router;
 
 window.axios = axios;
 window.router = router;
-window.toast = (title, message, variant = 'info') => {
-  alert(`${title}\n\n${message}\n\n${variant}`);
-};
+window.toast = app.config.globalProperties.toast;
 
 // Mount app
 app.mount('#app');
