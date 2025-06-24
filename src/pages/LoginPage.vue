@@ -80,7 +80,8 @@ export default {
         await window.axios.post('http://localhost:3000/Login', {
           username: state.username,
           password: state.password,
-        });
+        },
+        );
         window.store.login(state.username);
         window.router.push('/');
       } catch (err) {

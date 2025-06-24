@@ -64,6 +64,16 @@ export default {
           { params: { user_id } }
         );
         recipe.value = response.data.recipe;
+
+        // Mark as viewed (POST)
+        await axios.post(
+          `${store.server_domain}/recipes/viewed`,
+          {
+            recipeId: route.value.params.recipeId,
+            origin: recipe.value.image && recipe.value.image.includes('spoonacular') ? 'API' : 'DB',
+          }
+          {},{ withCredentials: true }
+        );
       } catch (err) {
         recipe.value = { title: "Recipe not found" };
       }
