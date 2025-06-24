@@ -1,11 +1,6 @@
 <template>
-  <div class="card h-100">
-    <img
-      v-if="recipe.image"
-      :src="recipe.image"
-      class="card-img-top recipe-image"
-      alt="Recipe image"
-    />
+  <div class="card h-100 recipe-preview" @click="goToDetails" style="cursor:pointer;">
+    <img v-if="recipe.image" :src="recipe.image" class="card-img-top recipe-image" :alt="recipe.title" />
     <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5>
       <p class="card-text mb-1">
@@ -33,6 +28,11 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    goToDetails() {
+      this.$router.push({ name: "recipe", params: { recipeId: this.recipe.id } });
+    }
   }
 }
 </script>
@@ -42,5 +42,9 @@ export default {
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+.recipe-preview:hover {
+  box-shadow: 0 0 0 2px #06b6d4;
+  transition: box-shadow 0.2s;
 }
 </style>

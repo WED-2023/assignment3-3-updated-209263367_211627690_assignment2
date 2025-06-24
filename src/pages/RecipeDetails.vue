@@ -14,9 +14,9 @@ export default {
       loading.value = true;
       try {
         const user_id = store.username || null;
-        // Replace with your backend endpoint for full recipe details
+        // Use the correct param name: recipeId
         const response = await axios.get(
-          `${store.server_domain}/recipes/full/${route.value.params.id}`,
+          `${store.server_domain}/recipes/${route.value.params.recipeId}`,
           { params: { user_id } }
         );
         recipe.value = response.data;
@@ -31,7 +31,7 @@ export default {
     }
 
     onMounted(fetchRecipe);
-    watch(() => route.value.params.id, fetchRecipe);
+    watch(() => route.value.params.recipeId, fetchRecipe);
 
     return { recipe, loading, startCooking };
   }
