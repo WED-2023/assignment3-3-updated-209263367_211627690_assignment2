@@ -16,14 +16,14 @@
       </router-link>
     </div>
 
-    <RecipePreviewList
+    <LastViewedRecipes
       title="Last Viewed Recipes"
       :class="{
         RandomRecipes: true,
         blur: !store.username,
         center: true
       }"
-      disabled
+      
     />
   </div>
 </template>
@@ -31,10 +31,13 @@
 <script>
 import { getCurrentInstance } from 'vue';
 import RecipePreviewList from "../components/RecipePreviewList.vue";
+import LastViewedRecipes from "../components/LastViewedRecipes.vue";
+
 
 export default {
   components: {
-    RecipePreviewList
+    RecipePreviewList,
+    LastViewedRecipes
   },
   setup() {
     const internalInstance = getCurrentInstance();
