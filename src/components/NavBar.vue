@@ -1,36 +1,31 @@
 <template>
   <b-navbar toggleable="lg" type="light" variant="light" class="shadow-sm mb-4" style="border-radius: 12px;">
-    <b-navbar-brand to="/" class="fw-bold" style="font-size: 1.5rem;">
-      🍲 
+    <b-navbar-brand href="#" class="fw-bold" style="font-size: 1.5rem;" @click.prevent="goToRoute('main')">
+      🍲 Recipes
     </b-navbar-brand>
-
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav class="me-auto">
-        <b-nav-item :to="{ name: 'main' }">Recipes</b-nav-item>
-        <b-nav-item :to="{ name: 'search' }">Search</b-nav-item>
-        <b-nav-item :to="{ name: 'about' }">About</b-nav-item>
+        <b-nav-item href="#" @click.prevent="goToRoute('main')">Recipes</b-nav-item>
+        <b-nav-item href="#" @click.prevent="goToRoute('search')">Search</b-nav-item>
+        <b-nav-item href="#" @click.prevent="goToRoute('about')">About</b-nav-item>
       </b-navbar-nav>
-
       <b-navbar-nav class="ms-auto align-items-center">
-        <!-- Guest -->
         <template v-if="!store.username">
           <span class="navbar-text me-3">Hello Guest</span>
-          <b-nav-item :to="{ name: 'login' }" class="me-2">Login</b-nav-item>
-          <b-nav-item :to="{ name: 'register' }" class="me-2">Register</b-nav-item>
+          <b-nav-item href="#" @click.prevent="goToRoute('login')" class="me-2">Login</b-nav-item>
+          <b-nav-item href="#" @click.prevent="goToRoute('register')" class="me-2">Register</b-nav-item>
         </template>
-
-        <!-- Logged in -->
         <template v-else>
           <span class="navbar-text fw-bold me-3">
-            Hello, {{ store.firstname || store.username }}
+            Hello, {{ store.username }}
           </span>
-          <b-nav-item-dropdown text="Personal Area" right class="me-2">
+        <b-dropdown text="Personal Area" variant="link" class="me-2" right>
             <b-dropdown-item @click="goTo('favorites')">My Favorite Recipes</b-dropdown-item>
             <b-dropdown-item @click="goTo('myRecipes')">My Recipes</b-dropdown-item>
             <b-dropdown-item @click="goTo('familyRecipes')">My Family Recipes</b-dropdown-item>
-          </b-nav-item-dropdown>
-          <b-nav-item :to="{ name: 'createRecipe' }" class="me-2">Create New Recipe</b-nav-item>
+          </b-dropdown>
+          <b-nav-item href="#" @click.prevent="goToRoute('createRecipe')" class="me-2">Create New Recipe</b-nav-item>
           <b-button variant="outline-danger" size="sm" @click="logout" class="ms-2">
             Logout
           </b-button>
@@ -69,7 +64,11 @@ export default {
       }
     };
 
-    return { store, logout, goTo };
+    const goToRoute = (name) => {
+      window.router.push({ name });
+    };
+
+    return { store, logout, goTo, goToRoute };
   }
 };
 </script>

@@ -8,8 +8,19 @@
     />
     <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5>
-      <p class="card-text">{{ recipe.readyInMinutes }} minutes</p>
-      <p class="card-text">{{ recipe.aggregateLikes }} likes</p>
+      <p class="card-text mb-1">
+        <span>{{ recipe.readyInMinutes }} min</span>
+        <span v-if="recipe.popularity"> | {{ recipe.popularity }} likes</span>
+      </p>
+      <div class="mb-2">
+        <span v-if="recipe.glutenFree" class="badge bg-success me-1" title="Gluten Free">Gluten Free</span>
+        <span v-if="recipe.vegan" class="badge bg-success me-1" title="Vegan">Vegan</span>
+        <span v-if="recipe.vegetarian" class="badge bg-success me-1" title="Vegetarian">Vegetarian</span>
+      </div>
+      <div class="mb-2">
+        <span v-if="recipe.favorite" class="badge bg-warning text-dark me-1" title="Favorite">★ Favorite</span>
+        <span v-if="recipe.viewed" class="badge bg-secondary me-1" title="Viewed">👁️ Viewed</span>
+      </div>
     </div>
   </div>
 </template>
