@@ -61,7 +61,7 @@ export default {
     const goTo = (tab) => {
       switch (tab) {
         case 'myFavorites':
-          window.router.push({ name: 'myFavorites' });
+          window.router.push({ name: 'myFavorites' }); // <-- Fix here
           break;
         case 'myRecipes':
           window.router.push({ name: 'myRecipes' });

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Main from "../pages/MainPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
+import MyFavoritesPage from "../pages/MyFavoritesPage.vue";
 
 const routes = [
   {
@@ -29,9 +30,9 @@ const routes = [
     component: () => import("../pages/AboutPage.vue"),
   },
   {
-    path: "/my-favorites",
-    name: "myFavorites",
-    component: () => import("../pages/MyFavoritesPage.vue"),
+    path: '/users/favorites',
+    name: 'myFavorites', // <-- This must match!
+    component: MyFavoritesPage
   },
   {
     path: "/my-recipes",
