@@ -41,7 +41,8 @@ export default {
       this.loading = true;
       try {
         const response = await this.axios.get( // problem in here 
-          this.$root.store.server_domain + "/user/lastWatchedRecipes"
+          this.$root.store.server_domain + "/users/lastWatchedRecipes",
+          { withCredentials: true }
         );
         const recipes = response.data;
         this.recipes = [];
