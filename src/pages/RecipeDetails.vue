@@ -72,7 +72,7 @@ export default {
             recipeId: route.value.params.recipeId,
             origin: recipe.value.image && recipe.value.image.includes('spoonacular') ? 'API' : 'DB',
           }
-          {},{ withCredentials: true }
+          ,{ withCredentials: true }
         );
       } catch (err) {
         recipe.value = { title: "Recipe not found" };

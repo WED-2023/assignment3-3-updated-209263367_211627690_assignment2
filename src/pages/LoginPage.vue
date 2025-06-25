@@ -81,6 +81,7 @@ export default {
           username: state.username,
           password: state.password,
         },
+          { withCredentials: true }
         );
         window.store.login(state.username);
         window.router.push('/');
