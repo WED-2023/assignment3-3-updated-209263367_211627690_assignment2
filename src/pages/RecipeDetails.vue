@@ -61,7 +61,7 @@ export default {
         const user_id = store.username || null;
         const response = await axios.get(
           `${store.server_domain}/recipes/PreviewRecipe/${route.value.params.recipeId}`,
-          { params: { user_id } }
+          { params: { user_id }, withCredentials: true }
         );
         recipe.value = response.data.recipe;
 
