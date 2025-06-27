@@ -23,6 +23,14 @@
               <p class="mb-1"><strong>Popularity:</strong> {{ recipe.popularity }}</p>
               <p class="mb-1"><strong>Servings:</strong> {{ recipe.amount }}</p>
               <button class="btn btn-primary mt-2" @click="startCooking">Start Cooking</button>
+              <button
+                class="btn btn-outline-warning mt-2 ms-2"
+                @click="addToFavorites"
+                :disabled="favoriteLoading"
+              >
+                <span v-if="favoriteLoading" class="spinner-border spinner-border-sm"></span>
+                <span v-else>☆ Add to Favorites</span>
+              </button>
             </div>
           </div>
         </div>
@@ -53,6 +61,7 @@ export default {
     const route = window.router.currentRoute;
     const recipe = ref({});
     const loading = ref(true);
+    const favoriteLoading = ref(false);
     const store = getCurrentInstance().appContext.config.globalProperties.store;
 
     async function fetchRecipe() {
@@ -71,8 +80,8 @@ export default {
           {
             recipeId: route.value.params.recipeId,
             origin: recipe.value.image && recipe.value.image.includes('spoonacular') ? 'API' : 'DB',
-          }
-          ,{ withCredentials: true }
+          },
+          { withCredentials: true }
         );
       } catch (err) {
         recipe.value = { title: "Recipe not found" };
@@ -84,10 +93,26 @@ export default {
       window.toast("Let's cook!", "Enjoy your meal!", "success");
     }
 
+    async function addToFavorites() {
+      if (!recipe.value || (!recipe.value.id && !recipe.value.recipe_id)) return;
+      favoriteLoading.value = true;
+      try {
+        await axios.post(
+          `${store.server_domain}/users/favorites`,
+          { recipeId: recipe.value.id || recipe.value.recipe_id },
+          { withCredentials: true }
+        );
+        window.toast("Added to favorites!", "This recipe is now in your favorites.", "success");
+      } catch (err) {
+        window.toast("Failed", "Could not add to favorites.", "error");
+      }
+      favoriteLoading.value = false;
+    }
+
     onMounted(fetchRecipe);
     watch(() => route.value.params.recipeId, fetchRecipe);
 
-    return { recipe, loading, startCooking };
+    return { recipe, loading, startCooking, addToFavorites, favoriteLoading };
   }
 };
 </script>
