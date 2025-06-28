@@ -34,6 +34,7 @@
             <b-dropdown-item @click="goTo('myFamilyRecipes')">Family Recipes</b-dropdown-item>
           </b-dropdown>
           <b-nav-item href="#" @click.prevent="goToRoute('createRecipe')" class="me-2">Create New Recipe</b-nav-item>
+          <b-nav-item href="#" @click.prevent="goToRoute('familyManager')" class="me-2">My Family Manager</b-nav-item>
           <b-button variant="outline-danger" size="sm" @click="logout" class="ms-2">
             Logout
           </b-button>

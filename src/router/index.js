@@ -58,6 +58,11 @@ const routes = [
     path: "/:catchAll(.*)",
     name: "notFound",
     component: NotFound,
+  },
+  {
+  path: '/family-manager',
+  name: 'familyManager',
+  component: () => import('../pages/FamilyManagerPage.vue')
   }
 ];
 
