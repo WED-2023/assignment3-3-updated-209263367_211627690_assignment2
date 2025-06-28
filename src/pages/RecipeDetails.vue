@@ -16,7 +16,7 @@
                 <span class="badge bg-success me-1" v-if="recipe.glutenFree">Gluten Free</span>
                 <span class="badge bg-success me-1" v-if="recipe.vegan">Vegan</span>
                 <span class="badge bg-success me-1" v-if="recipe.vegetarian">Vegetarian</span>
-                <span class="badge bg-warning text-dark me-1" v-if="recipe.favorite">★ Favorite</span>
+                <span class="badge bg-warning text-dark me-1" v-if="isFavorite">★ Favorite</span>
                 <span class="badge bg-secondary me-1" v-if="recipe.viewed">👁️ Viewed</span>
               </div>
               <p class="mb-1"><strong>Ready in:</strong> {{ recipe.readyInMinutes }} min</p>
@@ -24,12 +24,16 @@
               <p class="mb-1"><strong>Servings:</strong> {{ recipe.amount }}</p>
               <button class="btn btn-primary mt-2" @click="startCooking">Start Cooking</button>
               <button
-                class="btn btn-outline-warning mt-2 ms-2"
-                @click="addToFavorites"
+                class="btn"
+                :class="isFavorite ? 'btn-warning' : 'btn-outline-warning'"
+                @click="toggleFavorite"
                 :disabled="favoriteLoading"
               >
                 <span v-if="favoriteLoading" class="spinner-border spinner-border-sm"></span>
-                <span v-else>☆ Add to Favorites</span>
+                <span v-else>
+                  <template v-if="isFavorite">★ Remove from Favorites</template>
+                  <template v-else>☆ Add to Favorites</template>
+                </span>
               </button>
             </div>
           </div>
@@ -62,6 +66,7 @@ export default {
     const recipe = ref({});
     const loading = ref(true);
     const favoriteLoading = ref(false);
+    const isFavorite = ref(false);
     const store = getCurrentInstance().appContext.config.globalProperties.store;
 
     async function fetchRecipe() {
@@ -73,6 +78,14 @@ export default {
           { params: { user_id }, withCredentials: true }
         );
         recipe.value = response.data.recipe;
+
+        // Check if favorite
+        const favRes = await axios.get(
+          `${store.server_domain}/users/favorites`,
+          { withCredentials: true }
+        );
+        const favIds = favRes.data.map(r => r.recipe_id || r.id);
+        isFavorite.value = favIds.includes(recipe.value.id || recipe.value.recipe_id);
 
         // Mark as viewed (POST)
         await axios.post(
@@ -93,18 +106,33 @@ export default {
       window.toast("Let's cook!", "Enjoy your meal!", "success");
     }
 
-    async function addToFavorites() {
+    async function toggleFavorite() {
       if (!recipe.value || (!recipe.value.id && !recipe.value.recipe_id)) return;
       favoriteLoading.value = true;
       try {
-        await axios.post(
-          `${store.server_domain}/users/favorites`,
-          { recipeId: recipe.value.id || recipe.value.recipe_id },
-          { withCredentials: true }
-        );
-        window.toast("Added to favorites!", "This recipe is now in your favorites.", "success");
+        if (isFavorite.value) {
+          // Remove from favorites
+          await axios.delete(
+            `${store.server_domain}/users/favorites`,
+            {
+              data: { recipeId: recipe.value.id || recipe.value.recipe_id },
+              withCredentials: true
+            }
+          );
+          window.toast("Removed from favorites!", "This recipe is no longer in your favorites.", "info");
+          isFavorite.value = false;
+        } else {
+          // Add to favorites
+          await axios.post(
+            `${store.server_domain}/users/favorites`,
+            { recipeId: recipe.value.id || recipe.value.recipe_id },
+            { withCredentials: true }
+          );
+          window.toast("Added to favorites!", "This recipe is now in your favorites.", "success");
+          isFavorite.value = true;
+        }
       } catch (err) {
-        window.toast("Failed", "Could not add to favorites.", "error");
+        window.toast("Failed", "Could not update favorites.", "error");
       }
       favoriteLoading.value = false;
     }
@@ -112,7 +140,7 @@ export default {
     onMounted(fetchRecipe);
     watch(() => route.value.params.recipeId, fetchRecipe);
 
-    return { recipe, loading, startCooking, addToFavorites, favoriteLoading };
+    return { recipe, loading, startCooking, toggleFavorite, favoriteLoading, isFavorite };
   }
 };
 </script>
